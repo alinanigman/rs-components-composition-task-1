@@ -8,8 +8,15 @@ function App() {
   const [isGameEnded, setIsGameEnded] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [field, setField] = useState(["", "", "", "", "", "", "", "", ""]);
+  const resetGame = () => {
+    setCurrentPlayer("X");
+    setIsGameEnded(false);
+    setIsDraw(false);
+    setField(["", "", "", "", "", "", "", "", ""]);
+  };
+
   return (
-    <AppLayout>
+    <AppLayout onReset={resetGame}>
       <Information
         currentPlayer={currentPlayer}
         isGameEnded={isGameEnded}
