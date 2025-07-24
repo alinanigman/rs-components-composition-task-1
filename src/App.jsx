@@ -15,7 +15,15 @@ function App() {
         isGameEnded={isGameEnded}
         isDraw={isDraw}
       />
-      <Field field={field} setField={setField} />
+      <Field
+        currentPlayer={currentPlayer}
+        setCurrentPlayer={setCurrentPlayer}
+        isGameEnded={isGameEnded}
+        setIsGameEnded={setIsGameEnded}
+        isDraw={isDraw}
+        field={field}
+        setField={setField}
+      />
     </AppLayout>
   );
 }
