@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useStoreSelector } from "@/hooks/useStoreSelector";
+import { store } from "@/store";
 import "./AppLayout.module.css";
 import AppLayout from "./AppLayout";
 import Information from "./components/Information";
 import Field from "./components/Field";
+
 function App() {
-  const [currentPlayer, setCurrentPlayer] = useState("X");
-  const [isGameEnded, setIsGameEnded] = useState(false);
-  const [isDraw, setIsDraw] = useState(false);
-  const [field, setField] = useState(["", "", "", "", "", "", "", "", ""]);
+  const currentPlayer = useStoreSelector((s) => s.currentPlayer);
+  const isGameEnded = useStoreSelector((s) => s.isGameEnded);
+  const field = useStoreSelector((s) => s.field);
+
   const resetGame = () => {
-    setCurrentPlayer("X");
-    setIsGameEnded(false);
-    setIsDraw(false);
-    setField(["", "", "", "", "", "", "", "", ""]);
+    store.dispatch({ type: "RESET_GAME" });
   };
 
   const winningCombinations = [
@@ -31,35 +30,33 @@ function App() {
 
     const updatedField = [...field];
     updatedField[index] = currentPlayer;
-    setField(updatedField);
+    store.dispatch({ type: "UPDATE_FIELD", payload: updatedField });
 
     const isWin = winningCombinations.some((combo) => {
       return combo.every((i) => updatedField[i] === currentPlayer);
     });
 
     if (isWin) {
-      setIsGameEnded(true);
+      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
       return;
     }
 
     const isFull = updatedField.every((cell) => cell !== "");
+
     if (isFull) {
-      setIsDraw(true);
-      setIsGameEnded(true);
+      store.dispatch({ type: "SET_IS_DRAW", payload: true });
+      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
       return;
     }
 
-    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    const nextPlayer = currentPlayer === "X" ? "O" : "X";
+    store.dispatch({ type: "SET_CURRENT_PLAYER", payload: nextPlayer });
   };
 
   return (
     <AppLayout onReset={resetGame}>
-      <Information
-        currentPlayer={currentPlayer}
-        isGameEnded={isGameEnded}
-        isDraw={isDraw}
-      />
-      <Field field={field} onCellClick={handleClick} />
+      <Information />
+      <Field onCellClick={handleClick} />
     </AppLayout>
   );
 }
