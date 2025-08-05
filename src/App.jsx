@@ -1,6 +1,4 @@
-import { useStoreSelector } from "@/hooks/useStoreSelector";
-import { store } from "@/store";
-import { WINNING_COMBINATIONS } from "./constants/game";
+import { useStoreSelector, useGame } from "@/hooks";
 import AppLayout from "./AppLayout";
 import Information from "./components/Information";
 import Field from "./components/Field";
@@ -10,42 +8,15 @@ function App() {
   const isGameEnded = useStoreSelector((s) => s.isGameEnded);
   const field = useStoreSelector((s) => s.field);
 
-  const resetGame = () => {
-    store.dispatch({ type: "RESET_GAME" });
-  };
-
-  const handleClick = (index) => {
-    if (field[index] !== "" || isGameEnded) return;
-
-    const updatedField = [...field];
-    updatedField[index] = currentPlayer;
-    store.dispatch({ type: "UPDATE_FIELD", payload: updatedField });
-
-    const isWin = WINNING_COMBINATIONS.some((combo) => {
-      return combo.every((i) => updatedField[i] === currentPlayer);
-    });
-
-    if (isWin) {
-      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
-      return;
-    }
-
-    const isFull = updatedField.every((cell) => cell !== "");
-
-    if (isFull) {
-      store.dispatch({ type: "SET_IS_DRAW", payload: true });
-      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
-      return;
-    }
-
-    const nextPlayer = currentPlayer === "X" ? "O" : "X";
-    store.dispatch({ type: "SET_CURRENT_PLAYER", payload: nextPlayer });
-  };
-
+  const { resetGame, handleClick } = useGame();
   return (
     <AppLayout onReset={resetGame}>
       <Information />
-      <Field onCellClick={handleClick} />
+      <Field
+        onCellClick={(index) =>
+          handleClick(field, isGameEnded, currentPlayer, index)
+        }
+      />
     </AppLayout>
   );
 }
