@@ -1,6 +1,6 @@
 import { useStoreSelector } from "@/hooks/useStoreSelector";
 import { store } from "@/store";
-import "./AppLayout.module.css";
+import { WINNING_COMBINATIONS } from "./constants/game";
 import AppLayout from "./AppLayout";
 import Information from "./components/Information";
 import Field from "./components/Field";
@@ -14,17 +14,6 @@ function App() {
     store.dispatch({ type: "RESET_GAME" });
   };
 
-  const winningCombinations = [
-    [0, 1, 2], // top row
-    [3, 4, 5], // middle row
-    [6, 7, 8], // bottom row
-    [0, 3, 6], // left column
-    [1, 4, 7], // middle column
-    [2, 5, 8], // right column
-    [0, 4, 8], // main diagonal
-    [2, 4, 6], // anti-diagonal
-  ];
-
   const handleClick = (index) => {
     if (field[index] !== "" || isGameEnded) return;
 
@@ -32,7 +21,7 @@ function App() {
     updatedField[index] = currentPlayer;
     store.dispatch({ type: "UPDATE_FIELD", payload: updatedField });
 
-    const isWin = winningCombinations.some((combo) => {
+    const isWin = WINNING_COMBINATIONS.some((combo) => {
       return combo.every((i) => updatedField[i] === currentPlayer);
     });
 
