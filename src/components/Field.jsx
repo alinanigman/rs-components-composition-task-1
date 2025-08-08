@@ -1,8 +1,9 @@
-import { useStoreSelector } from "@/hooks/useStoreSelector";
+import { useSelector } from "react-redux";
+import { selectField } from "@/selectors";
 import FieldLayout from "./FieldLayout";
 
 const Field = ({ onCellClick }) => {
-  const field = useStoreSelector((s) => s.field);
+  const field = useSelector(selectField);
   return <FieldLayout field={field} onCellClick={onCellClick} />;
 };
 

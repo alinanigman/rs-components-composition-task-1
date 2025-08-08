@@ -1,9 +1,18 @@
-import { store } from "@/store";
+import { useDispatch } from "react-redux";
+import {
+  RESET_GAME as resetGameAction,
+  updateField,
+  setGameEnded,
+  setDraw,
+  setCurrentPlayer,
+} from "@/actions";
 import { checkWin, checkDraw } from "@/utils";
 
 export const useGame = () => {
+  const dispatch = useDispatch();
+
   const resetGame = () => {
-    store.dispatch({ type: "RESET_GAME" });
+    dispatch(resetGameAction());
   };
 
   const handleClick = (field, isGameEnded, currentPlayer, index) => {
@@ -11,21 +20,21 @@ export const useGame = () => {
 
     const updatedField = [...field];
     updatedField[index] = currentPlayer;
-    store.dispatch({ type: "UPDATE_FIELD", payload: updatedField });
+    dispatch(updateField(updatedField));
 
     if (checkWin(updatedField, currentPlayer)) {
-      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
+      dispatch(setGameEnded(true));
       return;
     }
 
     if (checkDraw(updatedField)) {
-      store.dispatch({ type: "SET_IS_DRAW", payload: true });
-      store.dispatch({ type: "SET_IS_GAME_ENDED", payload: true });
+      dispatch(setDraw(true));
+      dispatch(setGameEnded(true));
       return;
     }
 
     const nextPlayer = currentPlayer === "X" ? "O" : "X";
-    store.dispatch({ type: "SET_CURRENT_PLAYER", payload: nextPlayer });
+    dispatch(setCurrentPlayer(nextPlayer));
   };
 
   return { resetGame, handleClick };

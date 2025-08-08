@@ -1,10 +1,15 @@
-import { useStoreSelector } from "@/hooks/useStoreSelector";
+import { useSelector } from "react-redux";
+import {
+  selectCurrentPlayer,
+  selectIsGameEnded,
+  selectIsDraw,
+} from "@/selectors";
 import InformationLayout from "./InformationLayout";
 
 const Information = () => {
-  const currentPlayer = useStoreSelector((s) => s.currentPlayer);
-  const isGameEnded = useStoreSelector((s) => s.isGameEnded);
-  const isDraw = useStoreSelector((s) => s.isDraw);
+  const currentPlayer = useSelector(selectCurrentPlayer);
+  const isGameEnded = useSelector(selectIsGameEnded);
+  const isDraw = useSelector(selectIsDraw);
 
   const title = `Current Player: ${currentPlayer}`;
   const status = isDraw

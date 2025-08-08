@@ -5,7 +5,7 @@ export const initialState = {
   field: ["", "", "", "", "", "", "", "", ""],
 };
 
-export const gameReducer = (state = initialState, action) => {
+const gameReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -28,3 +28,5 @@ export const gameReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default gameReducer;
